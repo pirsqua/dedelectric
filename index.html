@@ -335,10 +335,10 @@
       100% { transform: translateX(calc(100vw + 200px)) rotate(20deg); filter: hue-rotate(0deg); }
     }
     
-    /* Fixed sky palm trunk */
+    /* Bigger floating palm trunks */
     .sky-palm-trunk {
-      width: 15px;
-      height: 60px;
+      width: 18px; /* Increased from 15px */
+      height: 90px; /* Increased from 60px */
       background: linear-gradient(to right, #6A5ACD, #836FFF, #6A5ACD);
       margin: 0 auto;
       position: relative;
@@ -727,7 +727,7 @@
                   left: '50%',
                   width: '100px', 
                   height: '80px', 
-                  transform: 'translate(-50%, -60%)'  /* Centered on trunk */
+                  transform: 'translate(-50%, -85%)' /* Adjusted for taller trunk */
                 }}>
                   <div style={{ position: 'absolute', top: '50%', left: '50%', width: '10px', height: '50px', background: '#7B68EE', borderRadius: '50% 50% 0 0', transformOrigin: 'bottom center', transform: 'translateX(-50%) translateY(-90%) rotate(-10deg)', boxShadow: '0 0 8px rgba(123, 104, 238, 0.5)', opacity: 0.9 }}></div>
                   <div style={{ position: 'absolute', top: '50%', left: '50%', width: '10px', height: '65px', background: '#9370DB', borderRadius: '50% 50% 0 0', transformOrigin: 'bottom center', transform: 'translateX(-50%) translateY(-90%) rotate(30deg)', boxShadow: '0 0 8px rgba(123, 104, 238, 0.5)', opacity: 0.9 }}></div>
