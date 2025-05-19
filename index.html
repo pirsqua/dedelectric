@@ -1,0 +1,759 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dancing Band Flowers Animation</title>
+  <!-- Load React -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.2.0/umd/react.production.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/umd/react-dom.production.min.js"></script>
+  <!-- Load Babel for JSX support -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/7.20.0/babel.min.js"></script>
+  <style>
+    body, html {
+      margin: 0;
+      padding: 0;
+      overflow: hidden;
+      width: 100%;
+      height: 100%;
+    }
+    #root {
+      width: 100%;
+      height: 100vh;
+    }
+    
+    /* Animation container and background */
+    .animation-container {
+      position: relative;
+      width: 100%;
+      height: 100vh;
+      overflow: hidden;
+      /* Sunset gradient sky */
+      background: linear-gradient(to bottom, #1A2980 0%, #4B3B76 20%, #D76D77 50%, #FFAF7B 70%, #F4A460 85%);
+      animation: sky-shift 10s infinite alternate;
+    }
+    
+    @keyframes sky-shift {
+      0% { background-position: 0% 0%; }
+      25% { background-position: 10% 30%; filter: hue-rotate(20deg); }
+      50% { background-position: 0% 60%; filter: hue-rotate(-20deg); }
+      75% { background-position: -10% 30%; filter: hue-rotate(30deg); }
+      100% { background-position: 0% 100%; filter: hue-rotate(0deg); }
+    }
+    
+    /* Add random flashing light effect over everything */
+    .animation-container::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      z-index: 20;
+      mix-blend-mode: overlay;
+      animation: flash-lights 15s infinite;
+    }
+    
+    @keyframes flash-lights {
+      0% { background-color: transparent; }
+      15% { background-color: rgba(255, 0, 0, 0.05); }
+      18% { background-color: transparent; }
+      40% { background-color: transparent; }
+      43% { background-color: rgba(0, 255, 255, 0.05); }
+      46% { background-color: transparent; }
+      76% { background-color: transparent; }
+      77% { background-color: rgba(255, 255, 0, 0.05); }
+      78% { background-color: transparent; }
+      92% { background-color: transparent; }
+      93% { background-color: rgba(128, 0, 255, 0.05); }
+      94% { background-color: transparent; }
+    }
+    
+    .trippy-background {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      animation: rotate-world 15s ease-in-out infinite alternate;
+      transform-origin: center center;
+    }
+    
+    @keyframes rotate-world {
+      0% { transform: rotate(-10deg) scale(1.02); }
+      25% { transform: rotate(-5deg) scale(1); }
+      50% { transform: rotate(0deg) scale(1.01); }
+      75% { transform: rotate(5deg) scale(1); }
+      100% { transform: rotate(-10deg) scale(1.02); }
+    }
+    
+    .sun {
+      position: absolute;
+      width: 150px;
+      height: 150px;
+      border-radius: 50%;
+      background: radial-gradient(circle, #FFD700, #FF8C00);
+      top: 80px;
+      right: 100px;
+      box-shadow: 0 0 70px 30px rgba(255, 150, 50, 0.7);
+      animation: sun-pulse 8s infinite alternate;
+      z-index: 3;
+      mix-blend-mode: screen;
+    }
+    
+    @keyframes sun-pulse {
+      0% { transform: scale(1); filter: hue-rotate(0deg); }
+      50% { transform: scale(1.2); filter: hue-rotate(15deg); }
+      100% { transform: scale(1); filter: hue-rotate(0deg); }
+    }
+    
+    /* Mountains styling */
+    .mountains {
+      position: absolute;
+      bottom: 25%;
+      width: 100%;
+      height: 200px;
+      z-index: 2;
+    }
+    
+    .mountain-range {
+      position: absolute;
+      bottom: 0;
+      width: 100%;
+      height: 100%;
+    }
+    
+    .mountain {
+      position: absolute;
+      bottom: 0;
+      border-radius: 50% 50% 0 0;
+      transform-origin: bottom center;
+    }
+    
+    .far-mountains .mountain {
+      background: linear-gradient(to bottom, #483D8B, #6A5ACD);
+      z-index: 2;
+      opacity: 0.8;
+    }
+    
+    .mid-mountains .mountain {
+      background: linear-gradient(to bottom, #5D478B, #836FFF);
+      z-index: 3;
+      opacity: 0.85;
+    }
+    
+    .near-mountains .mountain {
+      background: linear-gradient(to bottom, #8B7B8B, #A78BA4);
+      z-index: 4;
+      opacity: 0.9;
+    }
+    
+    .desert-ground {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      height: 25%;
+      background: linear-gradient(to bottom, #F4A460, #DEB887);
+      transform-origin: bottom center;
+      animation: ground-wave 10s infinite alternate;
+      z-index: 5;
+    }
+    
+    @keyframes ground-wave {
+      0% { transform: skewX(-5deg); }
+      50% { transform: skewX(5deg); }
+      100% { transform: skewX(-5deg); }
+    }
+    
+    /* Cactus styling */
+    .cactus {
+      position: absolute;
+      bottom: 25%;
+      width: 40px;
+      z-index: 6;
+      transform-origin: bottom center;
+      animation: sway 8s infinite ease-in-out;
+    }
+    
+    @keyframes sway {
+      0% { transform: rotate(-3deg); }
+      50% { transform: rotate(3deg); }
+      100% { transform: rotate(-3deg); }
+    }
+    
+    .cactus-body {
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(to right, #2E8B57, #3CB371, #2E8B57);
+      border-radius: 10px 10px 0 0;
+      position: relative;
+    }
+    
+    .cactus-arm {
+      position: absolute;
+      width: 25px;
+      height: 60px;
+      background: linear-gradient(to right, #2E8B57, #3CB371, #2E8B57);
+      border-radius: 10px;
+    }
+    
+    .cactus-arm.left {
+      left: -15px;
+      top: 30%;
+      transform: rotate(-30deg);
+    }
+    
+    .cactus-arm.right {
+      right: -15px;
+      top: 40%;
+      transform: rotate(30deg);
+    }
+    
+    .cactus-flower {
+      position: absolute;
+      top: -10px;
+      left: 10px;
+      width: 20px;
+      height: 20px;
+      background: #FF69B4;
+      border-radius: 50%;
+      animation: glow 3s infinite alternate;
+    }
+    
+    @keyframes glow {
+      0% { box-shadow: 0 0 5px #FF69B4; }
+      100% { box-shadow: 0 0 15px #FF69B4; }
+    }
+    
+    /* Palm tree styling */
+    .palm-tree {
+      position: absolute;
+      bottom: 25%;
+      z-index: 7;
+      transform-origin: bottom center;
+      animation: palm-sway 10s infinite ease-in-out;
+    }
+    
+    @keyframes palm-sway {
+      0% { transform: rotate(-3deg); }
+      50% { transform: rotate(3deg); }
+      100% { transform: rotate(-3deg); }
+    }
+    
+    .palm-trunk {
+      width: 20px;
+      height: 80%;
+      background: linear-gradient(to right, #8B4513, #A0522D, #8B4513);
+      margin: 0 auto;
+      position: relative;
+      /* Slight curve */
+      transform: rotate(2deg);
+    }
+    
+    /* Palm crown and leaf styling */
+    .palm-crown {
+      position: absolute;
+      top: 0;
+      left: -50px;
+      width: 120px;
+      height: 60px;
+      transform: translateY(-30px);
+    }
+    
+    .palm-leaf {
+      position: absolute;
+      top: 0;
+      left: 50%;
+      width: 100px;
+      height: 15px;
+      background: #32CD32;
+      border-radius: 100% 100% 0 0;
+      transform-origin: bottom left;
+      box-shadow: 0 0 5px rgba(50, 205, 50, 0.3);
+    }
+    
+    .left-leaf {
+      background: linear-gradient(to right, #228B22, #32CD32);
+    }
+    
+    .center-leaf {
+      height: 20px;
+      width: 120px;
+      background: linear-gradient(to right, #228B22, #32CD32, #228B22);
+    }
+    
+    .right-leaf {
+      background: linear-gradient(to right, #32CD32, #228B22);
+    }
+    
+	/* Floating sky palms */
+	.sky-palm {
+	  position: absolute;
+	  z-index: 4;
+	  opacity: 0.6;
+	  filter: brightness(0.8) hue-rotate(10deg);
+	  pointer-events: none;
+	  transform-origin: center center;
+	  animation: float-palm 45s linear infinite;
+	}
+	
+	@keyframes float-palm {
+	  0% { transform: translateX(-200px) rotate(0deg); }
+	  100% { transform: translateX(calc(100vw + 200px)) rotate(20deg); }
+	}
+	
+	.sky-palm-trunk {
+	  width: 15px;
+	  height: 60px;
+	  background: linear-gradient(to right, #6A5ACD, #836FFF, #6A5ACD);
+	  margin: 0 auto;
+	  position: relative;
+	  transform: rotate(5deg);
+	  opacity: 0.7;
+	}
+	
+	.sky-palm-crown {
+	  position: absolute;
+	  top: 0;
+	  left: -40px;
+	  width: 100px;
+	  height: 40px;
+	  transform: translateY(-20px);
+	}
+	
+	.sky-palm-leaf {
+	  position: absolute;
+	  top: 0;
+	  left: 50%;
+	  width: 80px;
+	  height: 12px;
+	  background: #7B68EE;
+	  border-radius: 100% 100% 0 0;
+	  transform-origin: bottom left;
+	  box-shadow: 0 0 10px rgba(123, 104, 238, 0.5);
+	  opacity: 0.8;
+	}
+	
+    /* Flower styling */
+    .flower-container {
+      position: absolute;
+      z-index: 10;
+      width: 180px; /* Wider to accommodate larger petals */
+      height: 280px; /* Taller to accommodate larger petals */
+      animation: flower-dance 4s infinite ease-in-out;
+      transform-origin: bottom center;
+      filter: saturate(1.2);
+    }
+    
+    @keyframes flower-dance {
+      0% { transform: translateY(0) rotate(-5deg) scale(0.98); }
+      25% { transform: translateY(-15px) rotate(-2deg) scale(1.01); }
+      50% { transform: translateY(0) rotate(5deg) scale(0.99); }
+      75% { transform: translateY(-15px) rotate(2deg) scale(1.01); }
+      100% { transform: translateY(0) rotate(-5deg) scale(0.98); }
+    }
+    
+    .flower-stem {
+      position: absolute;
+      bottom: 0;
+      left: 85px; /* Centered under the wider flower */
+      width: 15px; /* Slightly thicker stem */
+      height: 120px; /* Longer stem */
+      background: linear-gradient(to right, #228B22, #32CD32, #228B22);
+      z-index: 10;
+    }
+    
+    .flower-petals {
+      position: absolute;
+      bottom: 120px; /* Adjusted for longer stem */
+      left: 0;
+      width: 180px; /* Wider for larger petals */
+      height: 180px; /* Taller for larger petals */
+      z-index: 11;
+    }
+    
+    .petal-container {
+      position: absolute;
+      width: 180px;
+      height: 180px;
+      top: 0;
+      left: 0;
+    }
+    
+    .flower-petal {
+      position: absolute;
+      width: 50px;
+      height: 80px;
+      border-radius: 50% 50% 50% 50%;
+      animation: petal-pulse 3s infinite ease-in-out;
+      z-index: 11;
+      box-shadow: 0 0 12px rgba(255,255,255,0.4);
+      transition: all 0.3s ease;
+    }
+    
+    .inner-petal {
+      width: 40px;
+      height: 70px;
+      z-index: 12;
+      animation: petal-pulse 3.5s infinite ease-in-out;
+      box-shadow: 0 0 15px rgba(255,255,255,0.5);
+    }
+    
+    @keyframes petal-pulse {
+      0% { transform: rotate(0deg) scale(1); filter: hue-rotate(0deg); }
+      50% { transform: rotate(8deg) scale(1.05); filter: hue-rotate(10deg); }
+      100% { transform: rotate(0deg) scale(1); filter: hue-rotate(0deg); }
+    }
+    
+    .flower-face {
+      position: absolute;
+      bottom: 130px; /* Adjusted for longer stem */
+      left: 40px; /* Centered in wider flower */
+      width: 100px;
+      height: 100px;
+      border-radius: 50%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      overflow: hidden;
+      z-index: 15; /* Above all petals */
+      box-shadow: 0 0 20px rgba(255,255,255,0.7);
+      animation: face-trip 7s infinite alternate;
+    }
+    
+    @keyframes face-trip {
+      0% { transform: scale(1) rotate(0deg); filter: brightness(1); }
+      25% { transform: scale(1.05) rotate(5deg); filter: brightness(1.1) contrast(1.1); }
+      50% { transform: scale(0.95) rotate(-3deg); filter: brightness(0.9) contrast(0.9); }
+      75% { transform: scale(1.03) rotate(3deg); filter: brightness(1.2) contrast(1.05); }
+      100% { transform: scale(1) rotate(0deg); filter: brightness(1); }
+    }
+    
+    .face-image {
+      width: 90%;
+      height: 90%;
+      border-radius: 50%;
+    }
+    
+    .singing-mouth {
+      position: absolute;
+      background: black;
+      transition: height 0.2s ease, border-radius 0.2s ease;
+      box-shadow: 0 0 5px rgba(0,0,0,0.5);
+    }
+    
+    /* Floating particles */
+    .floating-particle {
+      position: absolute;
+      border-radius: 50%;
+      opacity: 0.7;
+      animation: float-around linear infinite;
+      box-shadow: 0 0 10px rgba(255,255,255,0.5);
+      z-index: 8;
+      mix-blend-mode: screen;
+    }
+    
+    @keyframes float-around {
+      0% {
+        transform: translateX(0) translateY(0) rotate(0deg);
+      }
+      25% {
+        transform: translateX(100px) translateY(-100px) rotate(90deg);
+      }
+      50% {
+        transform: translateX(200px) translateY(0) rotate(180deg);
+      }
+      75% {
+        transform: translateX(100px) translateY(100px) rotate(270deg);
+      }
+      100% {
+        transform: translateX(0) translateY(0) rotate(360deg);
+      }
+    }
+  </style>
+</head>
+<body>
+  <div id="root"></div>
+
+  <!-- The React component -->
+  <script type="text/babel">
+    const DancingBandFlowers = () => {
+      const [time, setTime] = React.useState(0);
+      const [mouthOpen, setMouthOpen] = React.useState([false, false, false, false]);
+      
+      // Animation timer for all movements - moderate pace
+      React.useEffect(() => {
+        const timer = setInterval(() => {
+          setTime(prevTime => prevTime + 1);
+          
+          // Randomly change mouth states for singing effect
+          setMouthOpen(prev => prev.map(() => Math.random() > 0.4)); // Slightly more often open than closed
+        }, 250); // Moderate pace
+        
+        return () => clearInterval(timer);
+      }, []);
+      
+      // Reference local image files
+      const bandFaces = [
+        "Ben.png", "Daymon.png", "Joe.png", "Justin.png"
+      ];
+      
+      // Set up flower positions and face/mouth adjustments for each band member
+      const flowerPositions = [
+        { 
+          left: '20%', 
+          bottom: '20%', 
+          delay: 0, 
+          color: '#FF69B4', 
+          // Face position adjustments (negative moves left/up, positive moves right/down)
+          faceAdjust: { top: -30, left: -2 },
+          // Mouth position adjustments
+          mouthAdjust: { bottom: '26px', left: '56px', width: '30px' }
+        },
+        { 
+          left: '40%', 
+          bottom: '25%', 
+          delay: 200, 
+          color: '#FFD700',
+          faceAdjust: { top: -10, left: 4 },
+          mouthAdjust: { bottom: '19px', left: '21px', width: '30px' }
+        },
+        { 
+          left: '60%', 
+          bottom: '15%', 
+          delay: 400, 
+          color: '#FF6347',
+          faceAdjust: { top: -25, left: -4 },
+          mouthAdjust: { bottom: '26px', left: '52px', width: '30px' }
+        },
+        { 
+          left: '80%', 
+          bottom: '22%', 
+          delay: 600, 
+          color: '#00CED1',
+          faceAdjust: { top: -46, left: -2 },
+          mouthAdjust: { bottom: '17px', left: '46px', width: '30px' }
+        },
+      ];
+      
+      return (
+        <div className="animation-container">
+          {/* Trippy background with auto-rotation */}
+          <div className="trippy-background">
+            {/* Sun */}
+            <div className="sun"></div>
+            
+            {/* Add some floating palm trees in the sky */}
+            {Array(7).fill().map((_, i) => (
+              <div key={`sky-palm-${i}`} className="sky-palm" style={{
+                top: `${10 + i * 8}%`,
+                left: `${(i * 15) % 100}%`,
+                transform: `scale(${0.6 + Math.random() * 0.8})`,
+                animationDelay: `${-5 * i}s`,
+                animationDuration: `${35 + Math.random() * 20}s`
+              }}>
+                <div className="sky-palm-trunk"></div>
+                <div className="sky-palm-crown">
+                  <div className="sky-palm-leaf" style={{ transform: 'rotate(-80deg) translateX(-15px)' }}></div>
+                  <div className="sky-palm-leaf" style={{ transform: 'rotate(-40deg) translateX(-5px)' }}></div>
+                  <div className="sky-palm-leaf" style={{ transform: 'rotate(0deg)' }}></div>
+                  <div className="sky-palm-leaf" style={{ transform: 'rotate(40deg) translateX(5px)' }}></div>
+                  <div className="sky-palm-leaf" style={{ transform: 'rotate(80deg) translateX(15px)' }}></div>
+                </div>
+              </div>
+            ))}
+            
+            {/* Mountains in background */}
+            <div className="mountains">
+              {/* Far mountain range */}
+              <div className="mountain-range far-mountains">
+                <div className="mountain" style={{ left: '5%', height: '150px', width: '300px' }}></div>
+                <div className="mountain" style={{ left: '25%', height: '180px', width: '350px' }}></div>
+                <div className="mountain" style={{ left: '50%', height: '200px', width: '400px' }}></div>
+                <div className="mountain" style={{ left: '75%', height: '170px', width: '320px' }}></div>
+              </div>
+              
+              {/* Mid mountain range */}
+              <div className="mountain-range mid-mountains">
+                <div className="mountain" style={{ left: '10%', height: '120px', width: '280px' }}></div>
+                <div className="mountain" style={{ left: '35%', height: '150px', width: '320px' }}></div>
+                <div className="mountain" style={{ left: '65%', height: '130px', width: '300px' }}></div>
+                <div className="mountain" style={{ left: '90%', height: '140px', width: '280px' }}></div>
+              </div>
+              
+              {/* Near mountain range */}
+              <div className="mountain-range near-mountains">
+                <div className="mountain" style={{ left: '0%', height: '100px', width: '250px' }}></div>
+                <div className="mountain" style={{ left: '20%', height: '110px', width: '260px' }}></div>
+                <div className="mountain" style={{ left: '45%', height: '120px', width: '280px' }}></div>
+                <div className="mountain" style={{ left: '70%', height: '105px', width: '240px' }}></div>
+                <div className="mountain" style={{ left: '90%', height: '95px', width: '230px' }}></div>
+              </div>
+            </div>
+            
+            {/* Desert ground */}
+            <div className="desert-ground"></div>
+            
+            {/* Generate detailed cacti */}
+            {Array(8).fill().map((_, i) => (
+              <div key={`cactus-${i}`} className="cactus" style={{
+                left: `${10 + i * 10}%`,
+                height: `${100 + Math.sin(i) * 50}px`,
+                animationDelay: `${i * 0.2}s`,
+              }}>
+                <div className="cactus-body"></div>
+                <div className="cactus-arm left"></div>
+                <div className="cactus-arm right"></div>
+                <div className="cactus-flower"></div>
+              </div>
+            ))}
+            
+            {/* Generate better palm trees */}
+            {Array(5).fill().map((_, i) => (
+              <div key={`palm-${i}`} className="palm-tree" style={{
+                left: `${15 + i * 15}%`,
+                height: `${200 + Math.sin(i * 2) * 50}px`,
+                animationDelay: `${i * 0.3}s`,
+              }}>
+                <div className="palm-trunk"></div>
+                
+                {/* Fan-like crown of palm leaves */}
+                <div className="palm-crown">
+                  {/* Left side leaves */}
+                  <div className="palm-leaf left-leaf" style={{ transform: 'rotate(-80deg) translateX(-15px)' }}></div>
+                  <div className="palm-leaf left-leaf" style={{ transform: 'rotate(-60deg) translateX(-10px)' }}></div>
+                  <div className="palm-leaf left-leaf" style={{ transform: 'rotate(-40deg) translateX(-5px)' }}></div>
+                  <div className="palm-leaf left-leaf" style={{ transform: 'rotate(-20deg)' }}></div>
+                  
+                  {/* Center leaf */}
+                  <div className="palm-leaf center-leaf"></div>
+                  
+                  {/* Right side leaves */}
+                  <div className="palm-leaf right-leaf" style={{ transform: 'rotate(20deg)' }}></div>
+                  <div className="palm-leaf right-leaf" style={{ transform: 'rotate(40deg) translateX(5px)' }}></div>
+                  <div className="palm-leaf right-leaf" style={{ transform: 'rotate(60deg) translateX(10px)' }}></div>
+                  <div className="palm-leaf right-leaf" style={{ transform: 'rotate(80deg) translateX(15px)' }}></div>
+                </div>
+              </div>
+            ))}
+          </div>
+          
+          {/* Dancing flowers with band member faces */}
+          {flowerPositions.map((pos, index) => (
+            <div 
+              key={`flower-${index}`}
+              className="flower-container"
+              style={{
+                left: pos.left,
+                bottom: pos.bottom,
+                animationDelay: `${index * 0.2}s`
+              }}
+            >
+              {/* Flower stem first (underneath everything) */}
+              <div className="flower-stem"></div>
+              
+              {/* Flower petals (behind the face) */}
+              <div className="flower-petals">
+                <div className="petal-container">
+                  {/* Outer ring of petals - now pointing outward from center */}
+                  {Array(16).fill().map((_, i) => {
+                    const angle = i * 22.5;
+                    const radians = angle * Math.PI / 180;
+                    const x = 60 * Math.sin(radians);
+                    const y = -60 * Math.cos(radians);
+                    return (
+                      <div 
+                        key={`petal-${index}-${i}`}
+                        className="flower-petal"
+                        style={{
+                          backgroundColor: pos.color,
+                          left: `calc(50% + ${x}px - 25px)`,
+                          top: `calc(50% + ${y}px - 40px)`,
+                          transform: `rotate(${angle + 90}deg)`, // Point outward by adding 90 degrees
+                          transformOrigin: 'center bottom',
+                          animationDelay: `${i * 0.1}s`,
+                        }}
+                      ></div>
+                    );
+                  })}
+                  
+                  {/* Inner ring of petals - now pointing outward from center */}
+                  {Array(12).fill().map((_, i) => {
+                    const angle = i * 30;
+                    const radians = angle * Math.PI / 180;
+                    const x = 40 * Math.sin(radians);
+                    const y = -40 * Math.cos(radians);
+                    return (
+                      <div 
+                        key={`petal-inner-${index}-${i}`}
+                        className="flower-petal inner-petal"
+                        style={{
+                          backgroundColor: `${pos.color}dd`,
+                          left: `calc(50% + ${x}px - 20px)`,
+                          top: `calc(50% + ${y}px - 35px)`,
+                          transform: `rotate(${angle + 90}deg)`, // Point outward by adding 90 degrees
+                          transformOrigin: 'center bottom',
+                          animationDelay: `${i * 0.15 + 0.1}s`,
+                        }}
+                      ></div>
+                    );
+                  })}
+                </div>
+              </div>
+              
+              {/* Flower center with face */}
+              <div className="flower-face" style={{ backgroundColor: pos.color }}>
+                <img 
+                  src={bandFaces[index]}
+                  alt={`Band member ${index+1}`}
+                  className="face-image"
+                  style={{
+                    objectPosition: `${pos.faceAdjust.left}px ${pos.faceAdjust.top}px`,
+                    objectFit: 'cover'
+                  }}
+                />
+                
+                {/* Animated mouth for singing */}
+                <div 
+                  className="singing-mouth"
+                  style={{
+                    height: mouthOpen[index] ? '15px' : '3px',
+                    borderRadius: mouthOpen[index] ? '40% 40% 50% 50%' : '2px',
+                    bottom: pos.mouthAdjust.bottom,
+                    left: pos.mouthAdjust.left,
+                    width: pos.mouthAdjust.width,
+                    boxShadow: mouthOpen[index] ? '0 0 5px rgba(0,0,0,0.5) inset' : 'none',
+                    transition: 'all 0.1s ease'
+                  }}
+                ></div>
+              </div>
+            </div>
+          ))}
+          
+          {/* Floating particles for trippy effect */}
+          {Array(50).fill().map((_, i) => (
+            <div 
+              key={`particle-${i}`}
+              className="floating-particle"
+              style={{
+                width: `${4 + Math.random() * 8}px`,
+                height: `${4 + Math.random() * 8}px`,
+                backgroundColor: ['#FF69B4', '#FFD700', '#FF6347', '#00CED1', '#FFFFFF', '#FFA500'][i % 6],
+                left: `${Math.random() * 100}%`,
+                top: `${Math.random() * 100}%`,
+                animationDuration: `${3 + Math.random() * 7}s`,
+                animationDelay: `${Math.random() * 3}s`,
+                opacity: Math.random() * 0.6 + 0.2,
+                borderRadius: '50%'
+              }}
+            ></div>
+          ))}
+        </div>
+      );
+    };
+
+    // Render the component
+    ReactDOM.render(<DancingBandFlowers />, document.getElementById('root'));
+  </script>
+</body>
+</html>
