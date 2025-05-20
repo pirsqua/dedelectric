@@ -398,7 +398,7 @@
     .flower-stem {
       position: absolute;
       bottom: 0;
-      left: 110px; /* Adjusted for new container width */
+      left: 110px;
       width: 18px;
       height: 150px;
       background: linear-gradient(to right, #228B22, #32CD32, #228B22);
@@ -591,8 +591,8 @@
   <script type="text/babel">
     const DancingBandFlowers = () => {
       const [time, setTime] = React.useState(0);
-      const [mouthOpen, setMouthOpen] = React.useState([false, false, false, false]);
-      const [audioReactive, setAudioReactive] = React.useState([0, 0, 0, 0]);
+      const [mouthOpen, setMouthOpen] = React.useState([false, false, false, false, false]);
+      const [audioReactive, setAudioReactive] = React.useState([0, 0, 0, 0, 0]);
       
       // Animation timer for all movements - faster pace
       React.useEffect(() => {
@@ -611,14 +611,14 @@
       
       // Reference local image files
       const bandFaces = [
-        "Ben.png", "Daymon.png", "Joe.png", "Justin.png"
+        "Ben.png", "Daymon.png", "Graeme.png", "Joe.png", "Justin.png"
       ];
       
-      // Set up flower positions and face/mouth adjustments for each band member - Adjusted to your specified spacing
+      // Set up flower positions and face/mouth adjustments for each band member
       const flowerPositions = [
         { 
-          left: '16%', 
-          bottom: '20%', 
+          left: '10%', 
+          bottom: '15%', 
           delay: 0, 
           color: '#FF69B4', 
           // Face position adjustments (negative moves left/up, positive moves right/down)
@@ -627,24 +627,32 @@
           mouthAdjust: { bottom: '26px', left: '56px', width: '30px' }
         },
         { 
-          left: '32%', 
-          bottom: '25%', 
+          left: '26%', 
+          bottom: '20%', 
           delay: 200, 
           color: '#FFD700',
           faceAdjust: { top: -10, left: 4 },
           mouthAdjust: { bottom: '19px', left: '21px', width: '30px' }
         },
         { 
-          left: '48%', 
-          bottom: '15%', 
+          left: '42%', 
+          bottom: '13%', 
+          delay: 300, 
+          color: '#FFBBBB',
+          faceAdjust: { top: 0, left: 0 },
+          mouthAdjust: { bottom: '22px', left: '41px', width: '30px' }
+        },
+        { 
+          left: '58%', 
+          bottom: '10%', 
           delay: 400, 
           color: '#FF6347',
           faceAdjust: { top: -25, left: -4 },
           mouthAdjust: { bottom: '26px', left: '52px', width: '30px' }
         },
         { 
-          left: '64%', 
-          bottom: '22%', 
+          left: '74%', 
+          bottom: '17%', 
           delay: 600, 
           color: '#00CED1',
           faceAdjust: { top: -46, left: -2 },
@@ -792,7 +800,7 @@
             {Array(8).fill().map((_, i) => (
               <div key={`palm-${i}`} className="palm-tree" style={{
                 left: `${5 + i * 12}%`,
-                height: `${250 + Math.sin(i * 2) * 50}px`, /* Taller for longer trunk */
+                height: `${500 + Math.sin(i * 2) * 50}px`, /* Taller for longer trunk */
                 animationDelay: `${i * 0.3}s`,
                 filter: `hue-rotate(${i * 10}deg)`,
                 transform: i % 2 === 0 ? 'rotate(3deg)' : 'rotate(-2deg)', /* Alternating slight lean */
@@ -917,7 +925,7 @@
                 }}>
                   <img 
                     src={bandFaces[index]}
-                    alt={`Band member ${index+1}`}
+                    alt={`DedMember ${index+1}`}
                     className="face-image"
                     style={{
                       objectPosition: `${pos.faceAdjust.left}px ${pos.faceAdjust.top}px`,
