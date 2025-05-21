@@ -591,8 +591,8 @@
   <script type="text/babel">
     const DancingBandFlowers = () => {
       const [time, setTime] = React.useState(0);
-      const [mouthOpen, setMouthOpen] = React.useState([false, false, false, false, false]);
-      const [audioReactive, setAudioReactive] = React.useState([0, 0, 0, 0, 0]);
+      const [mouthOpen, setMouthOpen] = React.useState([false, false, false, false]);
+      const [audioReactive, setAudioReactive] = React.useState([0, 0, 0, 0]);
       
       // Animation timer for all movements - faster pace
       React.useEffect(() => {
@@ -611,13 +611,13 @@
       
       // Reference local image files
       const bandFaces = [
-        "Ben.png", "Daymon.png", "Graeme.png", "Joe.png", "Justin.png"
+        "Ben.png", "Daymon.png", "Joe.png", "Justin.png"
       ];
       
       // Set up flower positions and face/mouth adjustments for each band member
       const flowerPositions = [
         { 
-          left: '10%', 
+          left: '16%', 
           bottom: '15%', 
           delay: 0, 
           color: '#FF69B4', 
@@ -627,7 +627,7 @@
           mouthAdjust: { bottom: '26px', left: '56px', width: '30px' }
         },
         { 
-          left: '26%', 
+          left: '34%', 
           bottom: '20%', 
           delay: 200, 
           color: '#FFD700',
@@ -635,15 +635,7 @@
           mouthAdjust: { bottom: '19px', left: '21px', width: '30px' }
         },
         { 
-          left: '42%', 
-          bottom: '13%', 
-          delay: 300, 
-          color: '#FFBBBB',
-          faceAdjust: { top: 0, left: 0 },
-          mouthAdjust: { bottom: '22px', left: '41px', width: '30px' }
-        },
-        { 
-          left: '58%', 
+          left: '52%', 
           bottom: '10%', 
           delay: 400, 
           color: '#FF6347',
@@ -651,7 +643,7 @@
           mouthAdjust: { bottom: '26px', left: '52px', width: '30px' }
         },
         { 
-          left: '74%', 
+          left: '70%', 
           bottom: '17%', 
           delay: 600, 
           color: '#00CED1',
